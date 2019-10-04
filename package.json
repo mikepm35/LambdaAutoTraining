@@ -1,0 +1,24 @@
+{
+  "name": "lambdaautotraining",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikepm35/LambdaAutoTraining.git"
+  },
+  "author": "Mike Moritz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mikepm35/LambdaAutoTraining/issues"
+  },
+  "homepage": "https://github.com/mikepm35/LambdaAutoTraining#readme",
+  "dependencies": {
+    "@tensorflow/tfjs": "^1.2.9",
+    "aws-sdk": "^2.538.0",
+    "request": "^2.88.0"
+  }
+}
