@@ -25,16 +25,20 @@ provider:
           - Ref: "ApiGatewayRestApi"
           - ".execute-api.${self:provider.region}.amazonaws.com/${self:provider.stage}"
 
+package:
+  exclude:
+    - py/**
+
 functions:
   upload:
-    handler: upload.upload
+    handler: js/upload.upload
     events:
       - http:
           path: upload
           method: post
         
   train:
-    handler: train.train
+    handler: js/train.train
     environment:
       AMI_ID: ami-0f812849f5bc97db5
       KEY_NAME: ec2testing
@@ -52,17 +56,17 @@ functions:
           batchWindow: 300
         
   infer:
-    handler: infer.infer
+    handler: js/infer.infer
     events:
       - http:
           path: infer
           method: post
           
   test:
-    handler: test.test  
+    handler: js/test.test  
     
   s3proxy:
-    handler: s3proxy.s3proxy
+    handler: js/s3proxy.s3proxy
     events:
       - http:
           path: s3proxy/{key}/{filename}
@@ -120,13 +124,14 @@ resources:
               Principal:
                 Service:
                   - lambda.amazonaws.com
-                  - ec2.amazonaws.com
+                  - ec2.amazonaws.com # added for transfer in train.js
               Action: sts:AssumeRole
         Policies:
           - PolicyName: ${self:service}-${opt:stage, self:provider.stage}-${self:provider.region}-managedpolicy
             PolicyDocument:
               Version: '2012-10-17'
               Statement:
+                # Begin default Serverless policies
                 - Effect: Allow 
                   Action:
                     - logs:CreateLogGroup
@@ -148,6 +153,7 @@ resources:
                        - ""
                        - - "arn:aws:s3:::"
                          - "Ref" : "ServerlessDeploymentBucket"
+                # Begin custom policies
                 - Effect: Allow
                   Action:
                     - s3:*
@@ -174,6 +180,7 @@ resources:
                     - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE_MODELS}"
                     - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE_DATA}"
                     - { Fn::GetAtt: [ DataDynamoDbTable, Arn ] }
+                # For custom role stream policy must be explicitly defined
                 - Effect: Allow
                   Action:
                     - dynamodb:GetRecords
@@ -190,13 +197,15 @@ resources:
                     - cloudwatch:DescribeAlarms
                     - cloudwatch:EnableAlarmActions
                   Resource: "*"   
+                # Allow for transferring role to EC2
                 - Effect: Allow
                   Action:
                     - iam:PassRole
                     - iam:GetInstanceProfile
                     - iam:CreateInstanceProfile
                     - iam:AddRoleToInstanceProfile
-                  Resource: "*"  
+                  Resource: "*"
+                # Used only by EC2 when role is transfered  
                 - Effect: Allow
                   Action:
                     - ecr:GetAuthorizationToken

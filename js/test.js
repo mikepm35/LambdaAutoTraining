@@ -93,7 +93,7 @@ module.exports.test = (event, context, callback) => {
     });
   }
   
-  var url = process.env.API_URL+'/upload';
+  var url = process.env.API_URL + '/upload';
   console.log('url: ', url);
     
   // POST data to upload
@@ -114,5 +114,4 @@ module.exports.test = (event, context, callback) => {
     }
   );
 
-  //return { message: 'test run successfully', event };
 };

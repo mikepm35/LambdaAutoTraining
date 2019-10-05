@@ -2,50 +2,13 @@
 
 // Load the SDK for JavaScript
 const AWS = require('aws-sdk');
-// Set the Region 
 AWS.config.update({region: process.env.REGION});
-
-// Create DynamoDB service object
 const ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 
-const testData = [ 
-  {
-    created: 1569861691316,
-    temp: 44,
-    rh: 38,
-    wind: 19,
-    clo: 0.26223705232180966,
-    label: 'ok',
-    score: 10.583140077331759
-  },
-  {
-    created: 1569861691317,
-    temp: 48,
-    rh: 25,
-    wind: 11,
-    clo: 0.45549595652619856,
-    label: 'ok',
-    score: 10.73776466298334
-  },
-  {
-    created: 1569861691318,
-    temp: 91,
-    rh: 99,
-    wind: 1,
-    clo: 1.113239650312202,
-    label: 'warm',
-    score: 20.94336949290375
-  } 
-];
-
 module.exports.upload = (event, context, callback) => {
-  var data = null;
-  if (!event) {
-    console.log('using testData');
-    data = testData;
-  } else {
-    data = JSON.parse(event.body);
-    console.log('data>>> ', data);
+  var data = event.body
+  if (typeof data == 'string') {
+    data = JSON.parse(data)
   }
   
   // construct put request items
