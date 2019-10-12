@@ -7,7 +7,6 @@ RUN useradd -ms /bin/bash lambdaautotraining
 WORKDIR /home/lambdaautotraining
 
 RUN apt-get update -y
-# RUN apt-get install -y git make gcc build-essential libffi-dev libssl-dev python3-dev
 
 COPY train.ipynb requirements.txt ./
 

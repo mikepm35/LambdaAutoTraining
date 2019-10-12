@@ -64,6 +64,10 @@ functions:
           
   test:
     handler: js/test.test  
+    events:
+      - schedule:
+          rate: rate(2 minutes)
+          enabled: false
     
   s3proxy:
     handler: js/s3proxy.s3proxy
@@ -197,7 +201,7 @@ resources:
                     - cloudwatch:DescribeAlarms
                     - cloudwatch:EnableAlarmActions
                   Resource: "*"   
-                # Allow for transferring role to EC2
+                # Allow for transferring role to EC2 and creating EC2 instance profile
                 - Effect: Allow
                   Action:
                     - iam:PassRole

@@ -35,28 +35,6 @@ module.exports.train = async event => {
   var userDataBuff = new Buffer(userData);
   var userDataBase64 = userDataBuff.toString('base64');
   console.log('Base64 encoded userData>>>', userDataBase64);
-
-  // Set EC2 instance parameters
-  var instanceParams = {
-     ImageId: process.env.AMI_ID, 
-     InstanceType: process.env.INSTANCE_TYPE,
-     KeyName: process.env.KEY_NAME,
-     MinCount: 1,
-     MaxCount: 1,
-     UserData: userDataBase64,
-     InstanceInitiatedShutdownBehavior: 'terminate',
-     InstanceMarketOptions: {
-       MarketType: 'spot',
-       SpotOptions: {
-         BlockDurationMinutes: process.env.SPOT_DURATION,
-         InstanceInterruptionBehavior: 'terminate',
-         SpotInstanceType: 'one-time',
-       }
-     },
-     IamInstanceProfile: {
-       Arn: 'STRING_VALUE',
-     },
-  };
   
   // Get instance profile
   var profileParams = {
@@ -84,7 +62,28 @@ module.exports.train = async event => {
   }      
   
   console.log('Instance profile data: ', profileData);
-  instanceParams.IamInstanceProfile.Arn = profileData.InstanceProfile.Arn;
+
+  // Set EC2 instance parameters
+  var instanceParams = {
+     ImageId: process.env.AMI_ID, 
+     InstanceType: process.env.INSTANCE_TYPE,
+     KeyName: process.env.KEY_NAME,
+     MinCount: 1,
+     MaxCount: 1,
+     UserData: userDataBase64,
+     InstanceInitiatedShutdownBehavior: 'terminate',
+     InstanceMarketOptions: {
+       MarketType: 'spot',
+       SpotOptions: {
+         BlockDurationMinutes: process.env.SPOT_DURATION,
+         InstanceInterruptionBehavior: 'terminate',
+         SpotInstanceType: 'one-time',
+       }
+     },
+     IamInstanceProfile: {
+       Arn: profileData.InstanceProfile.Arn,
+     },
+  };
 
   // Create EC2 instance
   try {
