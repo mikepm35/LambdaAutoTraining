@@ -4,6 +4,8 @@ Example Serverless project for creating a full machine learning workflow with AW
 and offloading training to EC2.  Uses Node.js for Lambda functions and a 
 Python Docker container for training.
 
+View the Medium companion article (link avoids paywall): https://medium.com/@mike.p.moritz/serverless-tensorflow-workflow-with-ec2-auto-training-495f47bd892d?sk=52282f09dc6dbffc9bdac6186850bf7a
+
 ![LambdaAutoTraining architecture](architecture.png)
 
 ## To get started - Node.js Lambda functions
