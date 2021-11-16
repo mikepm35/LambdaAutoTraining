@@ -18,7 +18,7 @@
   "homepage": "https://github.com/mikepm35/LambdaAutoTraining#readme",
   "dependencies": {
     "@tensorflow/tfjs": "^1.2.9",
-    "aws-sdk": "^2.538.0",
+    "aws-sdk": "^2.814.0",
     "request": "^2.88.0"
   }
 }
